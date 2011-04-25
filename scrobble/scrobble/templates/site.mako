@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="/static/css/style.css?v=2">
   <link rel='stylesheet' href="/static/css/site.css?v=1" type='text/css' />
   <script src="/static/js/libs/modernizr-1.7.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
 
 </head>
 
@@ -46,9 +47,6 @@
       </div>
     </div>
     
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-  <script>window.jQuery || document.write("<script src='/static/js/libs/jquery-1.5.1.min.js'>\x3C/script>")</script>
-
   <!-- scripts concatenated and minified via ant build script-->
   <script src="/static/js/plugins.js"></script>
   <script src="/static/js/site.js"></script>
@@ -66,8 +64,22 @@
     <div id="right">
       <div id="login_box">
         % if request.user:
-        Logged in as : ${request.user.key}
-        <a href="/logout">Logout</a>
+          Logged in as :
+          ${request.user.key} <a href="/logout">Logout</a>
+          <br/><br/>
+          <h1>Users you follow:</h1>
+          <ul>
+          % for u in request.user.get_following():
+            <li><a href="/user/${u}">${u}</a></li>
+          % endfor
+          </ul>
+          <br/>
+          <h1>Users following you:</h1>
+          <ul>
+          % for u in request.user.get_followers():
+            <li><a href="/user/${u}">${u}</a></li>
+          % endfor
+          </ul>
         % else:
         <form action="/login" method="post">
           <label for="login">Username:</label><input type="text" name="login"/><br/>

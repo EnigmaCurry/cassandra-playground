@@ -13,6 +13,8 @@ db_config = dict(
     column_families = dict(
         User = dict(),
         UserPassword = dict(),
+        UserFollowing = dict(),
+        UserFollower = dict(),
         UserTracks = dict(
             super=True,
             comparator_type=pycassa.system_manager.TIME_UUID_TYPE
@@ -52,15 +54,40 @@ class User(ModelBase):
         track = copy.copy(track)
         track["listen_date"] = date.strftime("%s")
         db.UserTracks.insert(self.key, {date : track})
-    def get_tracks(self, limit=100, start=None, end=None):
+    def get_tracks(self, limit=100):
         "Get played tracks"
-        attrs = {}
-        getter = operator.itemgetter(1)
         try:
             return db.UserTracks.get(
                 self.key, column_count=limit, column_reversed=True).values()
         except pycassa.NotFoundException:
             return []
+    def get_following(self, limit=100):
+        "Get the Users that the User is following"
+        try:
+            return db.UserFollowing.get(
+                self.key, column_count=limit).keys()
+        except pycassa.NotFoundException:
+            return []
+    def get_followers(self, limit=100):
+        "Get the Users that the User is followed by"
+        try:
+            return db.UserFollower.get(
+                self.key, column_count=limit).keys()
+        except pycassa.NotFoundException:
+            return []
+    def is_following(self, userid):
+        try:
+            db.UserFollowing.get(self.key, columns=[userid])
+        except pycassa.NotFoundException:
+            return False
+        return True
+    def add_following(self, userid):
+        user = User.get(userid) #raise NotFoundException if that user doesn't exist.
+        db.UserFollowing.insert(self.key, {userid:""})
+        db.UserFollower.insert(userid, {self.key:""})
+    def remove_following(self, userid):
+        db.UserFollowing.remove(self.key, (userid,))
+        db.UserFollower.remove(userid, (self.key,))
     def get_groups(self):
         if self.groups is None:
             return []
@@ -68,6 +95,8 @@ class User(ModelBase):
     def set_groups(self, groups):
         self.groups = ",".join(groups)
 
+class UserFollowers(ModelBase):
+    pass
 
 class UserPassword(ModelBase):
     "Seperate password store for accounts"

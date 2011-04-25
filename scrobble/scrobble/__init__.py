@@ -52,5 +52,7 @@ def main(global_config, **settings):
     config.add_route("api_login", "api/login")
     config.add_route("api_whoami", "api/whoami")
     config.add_route("api_track_listen", "api/track_listen")
+    config.add_route("api_follow_user", "api/follow_user")
+    config.add_route("api_unfollow_user", "api/unfollow_user")
     config.scan()
     return config.make_wsgi_app()

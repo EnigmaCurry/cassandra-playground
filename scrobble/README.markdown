@@ -10,6 +10,7 @@ backend:
 Basic Queries:
 
  * create a User
+ * record a User password hash for authentication
  * record Songs listened to per User
  * list last x played Songs per User in reverse chronological order
 
@@ -28,3 +29,4 @@ Harder queries:
 
  * List top tracks per user
  * List top tracks for all Users
+

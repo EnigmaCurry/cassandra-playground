@@ -26,3 +26,15 @@ def track_listen(request):
     song = json.loads(request.body)
     request.user.record_track(song)
     return Response(json.dumps("ok"))
+
+@view_config(route_name="api_follow_user", request_method='POST', permission="api")
+def follow_user(request):
+    user = json.loads(request.body)
+    request.user.add_following(user)
+    return Response(json.dumps("ok"))
+
+@view_config(route_name="api_unfollow_user", request_method='POST', permission="api")
+def unfollow_user(request):
+    user = json.loads(request.body)
+    request.user.remove_following(user)
+    return Response(json.dumps("ok"))

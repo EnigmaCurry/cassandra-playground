@@ -4,8 +4,6 @@ import sys
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.txt')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'pyramid',
@@ -27,7 +25,7 @@ if sys.version_info[:3] < (2,5,0):
 setup(name='scrobble',
       version='0.0',
       description='scrobble',
-      long_description=README + '\n\n' +  CHANGES,
+      long_description="A demo Last.fm clone written for Cassandra",
       classifiers=[
         "Programming Language :: Python",
         "Framework :: Pylons",

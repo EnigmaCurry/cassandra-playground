@@ -14,6 +14,19 @@
     });
 })(jQuery);
 
+var ScrobbleActions = function(){
+  var follow_user = function(userid, callback){
+    $.postJSON("/api/follow_user", userid, callback);
+  }
+  var unfollow_user = function(userid, callback){
+    $.postJSON("/api/unfollow_user", userid, callback);
+  }
+  return {
+      "follow_user": follow_user,
+      "unfollow_user": unfollow_user
+  }
+}();
+  
 $(document).ready(function(){
         var flash_msg = $("#flash_message");
         if(flash_msg){
