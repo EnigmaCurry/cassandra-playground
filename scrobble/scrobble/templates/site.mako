@@ -19,7 +19,7 @@
   <link rel='stylesheet' href="/static/css/site.css?v=1" type='text/css' />
   <script src="/static/js/libs/modernizr-1.7.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-
+  <script src="//ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js" type="text/javascript"></script>
 </head>
 
 <body>

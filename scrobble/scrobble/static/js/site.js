@@ -15,6 +15,9 @@
 })(jQuery);
 
 var ScrobbleActions = function(){
+  var track_listen = function(track, callback){
+    $.postJSON("/api/track_listen",track, callback);
+  }
   var follow_user = function(userid, callback){
     $.postJSON("/api/follow_user", userid, callback);
   }
@@ -22,11 +25,12 @@ var ScrobbleActions = function(){
     $.postJSON("/api/unfollow_user", userid, callback);
   }
   return {
+      "track_listen": track_listen,
       "follow_user": follow_user,
       "unfollow_user": unfollow_user
   }
 }();
-  
+
 $(document).ready(function(){
         var flash_msg = $("#flash_message");
         if(flash_msg){

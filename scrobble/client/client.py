@@ -34,6 +34,14 @@ def test():
     for track in load_track_list(os.path.join("track_lists","helios.txt")):
         print("sending: {0}".format(track))
         post_json("/api/track_listen", track)
+    user = post_json("/api/login",{"username":"test1","password":"asdf"})
+    for track in load_track_list(os.path.join("track_lists","pink_floyd.txt")):
+        print("sending: {0}".format(track))
+        post_json("/api/track_listen", track)
+    user = post_json("/api/login",{"username":"test2","password":"asdf"})
+    for track in load_track_list(os.path.join("track_lists","william_shatner.txt")):
+        print("sending: {0}".format(track))
+        post_json("/api/track_listen", track)
         
 if __name__ == "__main__":
     test()

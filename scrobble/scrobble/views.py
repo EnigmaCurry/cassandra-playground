@@ -28,6 +28,6 @@ def user_home(request):
     return {'user':user, "recent_tracks":tracks,
             "is_personal_page":is_personal_page}
 
-def test(request):
+@view_config(permission="api")
+def simulate_listen(request):
     return {}
-

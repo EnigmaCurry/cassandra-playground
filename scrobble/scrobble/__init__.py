@@ -45,9 +45,9 @@ def main(global_config, **settings):
                      view_renderer="user_home.mako")
 
     
-    config.add_route("test", "/test",
-                     view="scrobble.views.test",
-                     view_renderer="test.mako")
+    config.add_route("simulate_listen", "/simulate_listen",
+                     view="scrobble.views.simulate_listen",
+                     view_renderer="simulate.mako")
 
     config.add_route("api_login", "api/login")
     config.add_route("api_whoami", "api/whoami")
