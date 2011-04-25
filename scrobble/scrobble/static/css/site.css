@@ -10,23 +10,47 @@ body{
     background-color:#333;
     height:50px;
 }
+#header a:link,
+#header a:visited,
+#header a:hover,
+#header a:active {
+    color: #fff;
+    text-decoration: none;
+}
 
 #right{ 
     float:right;
-    width:200px;
+    width:220px;
     background-color:#dc8; 
     min-height:650px; /* for modern browsers */
     height:auto !important; /* for modern browsers */
+    margin-right:20px;
+}
+#login_box {
+    margin-top: 10px;
 }
 
 #center {
     position: absolute;
-    margin-right:200px;
+    margin-right:240px;
     background-color:#eec; 
     top: 50px;
     left: 0px;
     right: 20px;
     bottom: 100px;
+}
+#flash_message {
+    display: none;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+#flash_message_bg {
+    text-align: center;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #eec;
 }
 #content {
     margin: 20px;
@@ -47,6 +71,21 @@ body{
     text-align: center;
 }
 
+#right input {
+    margin: 10px;
+}
+
+input {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+#recent_tracks table{
+    width: 500px;
+}
+#recent_tracks td{
+    padding-top: 10px;
+}
 #app_title {
     font-size: 2.5em;
 }

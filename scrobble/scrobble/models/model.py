@@ -2,9 +2,10 @@ import pycassa
 import copy
 import json
 import datetime
+import operator
 
 import db
-from song_lists import load_song_list
+from track_lists import load_track_list
 
 db_config = dict(
     host = "localhost:9160",
@@ -12,7 +13,7 @@ db_config = dict(
     column_families = dict(
         User = dict(),
         UserPassword = dict(),
-        UserSongs = dict(
+        UserTracks = dict(
             super=True,
             comparator_type=pycassa.system_manager.TIME_UUID_TYPE
             )
@@ -23,13 +24,9 @@ class ModelBase(object):
     def __repr__(self):
         key = getattr(self, "key", None)
         d = copy.copy(self.__dict__)
-        try:
-            del d["key"]
-        except KeyError:
-            pass
-        return "<{0} key={1} {2}>".format(
+        return "<{0} key={1}>".format(
             self.__class__.__name__,
-            key,json.dumps(d))
+            key)
     @classmethod
     def get(cls, key):
         return cls.objects.get(key)
@@ -39,23 +36,38 @@ class ModelBase(object):
 class User(ModelBase):
     fname = pycassa.String()
     lname = pycassa.String()
+    email = pycassa.String()
     created = pycassa.DateTimeString()
+    #comma seperated group list:
+    groups = pycassa.String()
     @classmethod
     def get_all_usernames(cls, limit=100):
         """Get all the usernames (up to limit) without loading the
         entire user object"""
         for user in User.objects.get_range(row_count=limit,columns=[]):
             yield user.key
-    def record_song(self, song, date=None):
+    def record_track(self, track, date=None):
         if date is None:
             date = datetime.datetime.now()
-        db.UserSongs.insert(self.key, {date : song})
-    def get_songs(self, limit=100, start=None, end=None):
-        "Get played songs"
+        track = copy.copy(track)
+        track["listen_date"] = date.strftime("%s")
+        db.UserTracks.insert(self.key, {date : track})
+    def get_tracks(self, limit=100, start=None, end=None):
+        "Get played tracks"
         attrs = {}
-        songs = db.UserSongs.get(
-            self.key, column_count=limit, column_reversed=True)
-        return songs.values()
+        getter = operator.itemgetter(1)
+        try:
+            return db.UserTracks.get(
+                self.key, column_count=limit, column_reversed=True).values()
+        except pycassa.NotFoundException:
+            return []
+    def get_groups(self):
+        if self.groups is None:
+            return []
+        return self.groups.split(",")
+    def set_groups(self, groups):
+        self.groups = ",".join(groups)
+
 
 class UserPassword(ModelBase):
     "Seperate password store for accounts"
@@ -69,8 +81,8 @@ def test_data():
     ryan.lname = "McGuire"
     ryan.persist()
 
-    for song in load_song_list("helios.txt"):
-        ryan.record_song(song)
+    for track in load_track_list("helios.txt"):
+        ryan.record_track(track)
     
     print ryan.get_songs()
     

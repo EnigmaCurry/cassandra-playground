@@ -1,5 +1,7 @@
 /scrobble/production.ini
 /scrobble/venv
+/scrobble/data
 *.pyc
 *~
-#*
+\#*
+.#*

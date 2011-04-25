@@ -1,12 +1,23 @@
 <%inherit file="site.mako"/>
-<p>User: ${user.key}</p>
 
-
-<div id="recent_tracks">
-  Recently Listened Tracks:
-  <ul>
-    % for song in user.get_songs(limit=10):
-    <li>${song["artist"]} - ${song["title"]}</li>
-    % endfor
-  </ul>
-</div>
+% if len(recent_tracks) > 0:
+ <div id="recent_tracks">
+   <h1>${user.key.title()}'s Recent Tracks:</h1>
+   <table>
+     % for track in recent_tracks:
+     <tr>
+       <td>${track["artist"]} -
+       ${track["title"]}</td><td>${track["english_delta"]} ago</td>
+     </tr>
+     % endfor
+   </table>
+ </div>
+% else:
+ % if is_personal_page:
+  <h1>Welcome ${user.fname}!</h1>
+  <br/>
+  You haven't listened to anything yet.
+ % else:
+   ${user.key} hasn't listened to anything yet.
+ % endif
+% endif

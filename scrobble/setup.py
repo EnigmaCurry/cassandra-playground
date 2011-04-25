@@ -9,6 +9,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'pyramid',
+    'pyramid_beaker',
     'SQLAlchemy',
     'transaction',
     'repoze.tm2>=1.0b1', # default_commit_veto
@@ -16,7 +17,8 @@ requires = [
     'WebError',
     'pycassa',
     'thrift',
-    'py-bcrypt'
+    'py-bcrypt',
+    'babel'
     ]
 
 if sys.version_info[:3] < (2,5,0):
