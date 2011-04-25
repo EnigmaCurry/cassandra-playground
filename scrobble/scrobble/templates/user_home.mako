@@ -32,26 +32,23 @@
  % endif
 % endif
 
-<script>
-  var user = "${user.key}"
-  var is_personal_page = false;
-  var is_following = false;
-  % if request.user is not None:
-   % if is_personal_page:
-  is_personal_page = true;
-   % elif request.user.is_following(user.key):
-  is_following = true;
-   % endif
-  % endif
+<%
+import json
+following_state = json.dumps({"user":user.key,
+             "is_personal_page":is_personal_page,
+             "is_following":request.user is not None and request.user.is_following(user.key)})
+%>
 
+<script>
+  var state = ${following_state};
   $(document).ready(function(){
     var reload_callback = function(){window.location.reload()}
-    if(is_personal_page == false){
+    if(state.is_personal_page == false){
       $("#follow_link").click(function(){
-        if(is_following){
-         ScrobbleActions.unfollow_user(user, reload_callback);
+        if(state.is_following){
+         ScrobbleActions.unfollow_user(state.user, reload_callback);
         } else {
-         ScrobbleActions.follow_user(user, reload_callback);
+         ScrobbleActions.follow_user(state.user, reload_callback);
         }
       });
     }
