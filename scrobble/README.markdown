@@ -8,16 +8,19 @@ data, here's an outline of the queries one does against a scrobble
 backend:
 
 Basic Queries:
+
  * create a User
  * record Songs listened to per User
  * list last x played Songs per User in reverse chronological order
 
 Friends:
+
  * record a User following another User
  * list Users a User follows
  * list Users that follows a User
 
 Harder queries:
+
  * record a Tag on a Song per User
  * record a Tag on an Artist per User
  * record a Tag on an Album per User
