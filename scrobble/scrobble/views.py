@@ -21,7 +21,7 @@ def user_home(request):
     tracks = user.get_tracks(limit=10)
     for t in tracks:
         t["english_delta"] = timesince(datetime.utcfromtimestamp(
-                long(t["listen_date"])))
+                long(t["listen_date"])),now=datetime.utcnow())
     is_personal_page = hasattr(request,"user") and request.user is not None \
         and (user.key == request.user.key)
     
