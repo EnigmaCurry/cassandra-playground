@@ -92,8 +92,8 @@ class Timeline(object):
         return date.strftime("%Y-%m-%d")
     def __is_date_same_day(self, date, test_date):
         "Is a date on the same day as test_date?"
-        return datetime(*date.timetuple()[:3]) == \
-            datetime(*test_date.timetuple()[:3])
+        return date.timetuple()[:3] == \
+            test_date.timetuple()[:3]
 
 class TimelineTest(unittest.TestCase):
     def setUp(self):
