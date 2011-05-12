@@ -165,4 +165,28 @@ class TimelineTest(unittest.TestCase):
                                                  datetime(2011,6,1))
         self.assertEqual(len(may_events), 200)
         
-        
+    def testTightDateRange(self):
+        "Can we get events for just a single hour of the day?"
+        timeline = Timeline(self.cf)        
+        hour_events = [
+            (datetime(2011,5,11,12,01),"Mid-day event 1"),
+            (datetime(2011,5,11,12,05),"Mid-day event 2"),
+            (datetime(2011,5,11,12,33),"Mid-day event 3"),
+            ]
+        other_events = [
+            (datetime(2011,5,11,8,01),"Other event 1"),
+            (datetime(2011,5,11,9,01),"Other event 2"),
+            (datetime(2011,5,11,15,01),"Other  event 3"),
+            ]
+        for date, event in hour_events:
+            timeline.append(event, time=date)
+        for date, event in other_events:
+            timeline.append(event, time=date)
+        #Get all the events:
+        all_events = timeline.get_events_between(datetime(2011,5,11),
+                                                 datetime(2011,5,12))
+        self.assertEqual(len(all_events), 6)
+        #Get just the events for the hour:
+        db_hour_events = timeline.get_events_between(datetime(2011,5,11,12,00),
+                                                 datetime(2011,5,11,13,00))
+        self.assertEqual(db_hour_events, hour_events)
