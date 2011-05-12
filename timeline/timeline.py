@@ -63,13 +63,24 @@ class Timeline(object):
             date = date + timedelta(1)
         return events
     def __get_days_events(self, date, start, finish):
+        #Don't use column ranges unless we have to.
+        #For dates not sharing a day with start or finish, we don't need to.
         try:
-            for event in self.column_family.get(
-                self.__datetime_to_cf_key(date),
-                column_start=start, column_finish=finish).values() :
-                yield self.__decode_event(event)
+            if self.__is_date_same_day(date, start) or \
+                    self.__is_date_same_day(date, finish):
+                #Get the events constrained by our range:
+                events = self.column_family.get(
+                    self.__datetime_to_cf_key(date),
+                    column_start=start,
+                    column_finish=finish).values()
+            else:
+                #Get the entire days events
+                events = self.column_family.get(
+                    self.__datetime_to_cf_key(date)).values()
         except pycassa.NotFoundException:
             return
+        for event in events:
+            yield self.__decode_event(event)
     def __encode_event(self, event, date):
         return "%s|%s" % (mktime(date.timetuple()), event)
     def __decode_event(self, value):
@@ -79,6 +90,10 @@ class Timeline(object):
     def __datetime_to_cf_key(self, date):
         "Create a column family key from a datetime"
         return date.strftime("%Y-%m-%d")
+    def __is_date_same_day(self, date, test_date):
+        "Is a date on the same day as test_date?"
+        return datetime(*date.timetuple()[:3]) == \
+            datetime(*test_date.timetuple()[:3])
 
 class TimelineTest(unittest.TestCase):
     def setUp(self):
